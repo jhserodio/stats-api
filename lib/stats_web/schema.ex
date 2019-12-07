@@ -7,9 +7,9 @@ defmodule StatsWeb.Schema do
     alias StatsWeb.Validators
 
     enum :gender do
-        value :male
-        value :female
-        value :unidentifield
+        value :male  , as: "MALE"
+        value :female, as: "FEMALE"
+        value :unidentified, as: "UNIDENTIFIED"
     end
 
     scalar :email do
