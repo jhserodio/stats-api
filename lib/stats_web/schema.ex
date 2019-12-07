@@ -30,6 +30,16 @@ defmodule StatsWeb.Schema do
         field :users, non_null(list_of(non_null(:user))) do
             resolve &RecordsResolver.user_list/3
         end
+
+        field :user, non_null(:user) do
+            arg :id, non_null(:id)
+            resolve &RecordsResolver.user/3
+        end
+
+        field :user_by_email, non_null(:user) do
+            arg :email, non_null(:email)
+            resolve &RecordsResolver.user_by_email/3
+        end
     end
 
 end
