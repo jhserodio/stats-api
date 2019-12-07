@@ -1,11 +1,23 @@
-# Script for populating the database. You can run it as:
-#
-#     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     Stats.Repo.insert!(%Stats.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+alias Stats.Records.User
+alias Stats.Repo
+
+%User{
+    name: "Joao Henrique Serodio",
+    email: "joao.serodio@vnator.com",
+    date_of_birth: ~D[1989-09-20],
+    gender: "MALE"
+}  |> Repo.insert!
+
+%User{
+    name: "Ana Caroline Silva Vieira",
+    email: "ana.vieira@vnator.com",
+    date_of_birth: ~D[1996-06-07],
+    gender: "FEMALE"
+}  |> Repo.insert!
+
+%User{
+    name: "Murilo Borges Andrade",
+    email: "murilo.andrade@vnator.com",
+    date_of_birth: ~D[1992-04-08],
+    gender: "UNIDENTIFIED"
+}  |> Repo.insert!
