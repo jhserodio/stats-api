@@ -12,6 +12,18 @@ defmodule StatsWeb.Schema do
         value :unidentified, as: "UNIDENTIFIED"
     end
 
+    enum :sort_field do
+        value :name, as: :name
+        value :email, as: :email
+        value :gender, as: :gender
+        value :date_of_birth, as: :date_of_birth
+    end
+
+    enum :sort_order do
+        value :asc
+        value :desc
+    end
+
     scalar :email do
         description "Email type"
         serialize fn(x) -> x end
@@ -27,7 +39,11 @@ defmodule StatsWeb.Schema do
     end
 
     query do
-        field :users, non_null(list_of(non_null(:user))) do
+        field :users, non_null(list_of(:user)) do
+            arg :limit, :integer, default_value: 10
+            arg :skip, :integer, default_value: 0
+            arg :sort_field, :sort_field, default_value: :name
+            arg :sort_order, :sort_order, default_value: :asc
             resolve &RecordsResolver.user_list/3
         end
 

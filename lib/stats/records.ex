@@ -17,9 +17,23 @@ defmodule Stats.Records do
       [%User{}, ...]
 
   """
-  def list_users do
-    Repo.all(User)
+  def list_users(limit, skip, sort_field, sort_order) do
+    resultado = {sort_order, sort_field}
+    query = from(
+      u in User,
+      order_by: ^resultado,
+      offset: ^skip
+    )
+
+    %{entries: entries, metadata: metadata} = Repo.paginate(
+      query,
+      cursor_fields: [sort_field],
+      limit: limit
+    )
+
+    entries
   end
+
 
   @doc """
   Gets a single user.

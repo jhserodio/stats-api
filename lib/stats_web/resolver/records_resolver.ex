@@ -1,8 +1,17 @@
 defmodule StatsWeb.RecordsResolver do
     alias Stats.Records
     
-    def user_list(_root, _args, _info) do
-      users = Records.list_users()
+    def user_list(
+        _root,
+        %{
+           limit: limit,
+           skip: skip,
+           sort_field: sort_field,
+           sort_order: sort_order
+        },
+        _info
+    ) do
+      users = Records.list_users(limit, skip, sort_field, sort_order)
       {:ok, users}
     end
 
