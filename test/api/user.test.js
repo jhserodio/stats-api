@@ -29,9 +29,9 @@ describe('User Tests', function() {
             })
     });
 
-    it('check if user with id: 13 dont exist', done => {
+    it('check if user with id: 9999 dont exist', done => {
         const query = `{
-            user(id: 999) {
+            user(id: 9999) {
                 name
                 email
                 gender
