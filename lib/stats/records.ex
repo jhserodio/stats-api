@@ -49,7 +49,14 @@ defmodule Stats.Records do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    query = from u in User, where: u.id == ^id
+    if Repo.exists?(query) do
+      Repo.get!(User, id)
+    else
+      nil
+    end 
+  end
 
 
   @doc """
@@ -66,8 +73,13 @@ defmodule Stats.Records do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user_by_email!(email), do: Repo.get_by!(User, [email: email])
-
+  def get_user_by_email!(email) do
+    if user_exist?(email) do
+      Repo.get_by!(User, [email: email])
+    else
+      nil
+    end 
+  end
 
   @doc """
   Check if user exist by email.
