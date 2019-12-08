@@ -68,6 +68,13 @@ defmodule Stats.Records do
   """
   def get_user_by_email!(email), do: Repo.get_by!(User, [email: email])
 
+
+
+  def user_exist?(email) do
+    query = from u in User, where: u.email == ^email
+    Repo.exists?(query)
+  end
+
   @doc """
   Creates a user.
 

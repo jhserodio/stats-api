@@ -32,4 +32,23 @@ defmodule StatsWeb.RecordsResolver do
               {:ok, user}
         end
     end
+
+    def upsert_user(_root, args, _info) do
+      if Records.user_exist?(args.email) do
+        user = Records.get_user_by_email!(args.email)
+        case Records.update_user(user, args) do
+          {:ok, user} ->
+            {:ok, user}
+          _error ->
+            {:error, "could not create user"}
+        end
+      else
+        case Records.create_user(args) do
+          {:ok, user} ->
+            {:ok, user}
+          _error ->
+            {:error, "could not create user"}
+        end
+      end
+    end
 end

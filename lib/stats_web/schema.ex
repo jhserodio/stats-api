@@ -32,10 +32,10 @@ defmodule StatsWeb.Schema do
 
     object :user do
         field :id, non_null(:id)
-        field :name, non_null(:string)
+        field :name, :string
         field :email, non_null(:email)
         field :gender, non_null(:gender)
-        field :date_of_birth, non_null(:date)
+        field :date_of_birth, :date
     end
 
     query do
@@ -55,6 +55,17 @@ defmodule StatsWeb.Schema do
         field :user_by_email, non_null(:user) do
             arg :email, non_null(:email)
             resolve &RecordsResolver.user_by_email/3
+        end
+    end
+
+    mutation do
+        field :upsert_user, :user do
+            arg :email, non_null(:email)
+            arg :name, :string
+            arg :gender, :gender
+            arg :date_of_birth, :date
+
+            resolve &RecordsResolver.upsert_user/3
         end
     end
 
