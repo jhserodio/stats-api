@@ -10,11 +10,17 @@ defmodule StatsWeb.Schema.Types do
         value :unidentified, as: "UNIDENTIFIED"
     end
 
-    enum :sort_field do
+    enum :sort_field_user do
         value :id, as: :id
         value :name, as: :name
         value :email, as: :email
         value :date_of_birth, as: :date_of_birth
+    end
+
+    enum :sort_field_website do
+        value :id, as: :id
+        value :url, as: :url
+        value :topic, as: :topic
     end
 
     enum :sort_order do

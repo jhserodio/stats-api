@@ -7,7 +7,7 @@ defmodule StatsWeb.Schema.Website do
         field :websites, non_null(list_of(:website)) do
             arg :limit, :integer, default_value: 10
             arg :skip, :integer, default_value: 0
-            arg :sort_field, :sort_field, default_value: :id
+            arg :sort_field, :sort_field_website, default_value: :id
             arg :sort_order, :sort_order, default_value: :asc
             resolve &WebsitesResolver.website_list/3
         end
