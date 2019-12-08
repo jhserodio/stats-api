@@ -67,4 +67,65 @@ defmodule Stats.RecordsTest do
       assert %Ecto.Changeset{} = Records.change_user(user)
     end
   end
+
+  describe "websites" do
+    alias Stats.Records.Website
+
+    @valid_attrs %{topic: "some topic", url: "some url"}
+    @update_attrs %{topic: "some updated topic", url: "some updated url"}
+    @invalid_attrs %{topic: nil, url: nil}
+
+    def website_fixture(attrs \\ %{}) do
+      {:ok, website} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Records.create_website()
+
+      website
+    end
+
+    test "list_websites/0 returns all websites" do
+      website = website_fixture()
+      assert Records.list_websites() == [website]
+    end
+
+    test "get_website!/1 returns the website with given id" do
+      website = website_fixture()
+      assert Records.get_website!(website.id) == website
+    end
+
+    test "create_website/1 with valid data creates a website" do
+      assert {:ok, %Website{} = website} = Records.create_website(@valid_attrs)
+      assert website.topic == "some topic"
+      assert website.url == "some url"
+    end
+
+    test "create_website/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Records.create_website(@invalid_attrs)
+    end
+
+    test "update_website/2 with valid data updates the website" do
+      website = website_fixture()
+      assert {:ok, %Website{} = website} = Records.update_website(website, @update_attrs)
+      assert website.topic == "some updated topic"
+      assert website.url == "some updated url"
+    end
+
+    test "update_website/2 with invalid data returns error changeset" do
+      website = website_fixture()
+      assert {:error, %Ecto.Changeset{}} = Records.update_website(website, @invalid_attrs)
+      assert website == Records.get_website!(website.id)
+    end
+
+    test "delete_website/1 deletes the website" do
+      website = website_fixture()
+      assert {:ok, %Website{}} = Records.delete_website(website)
+      assert_raise Ecto.NoResultsError, fn -> Records.get_website!(website.id) end
+    end
+
+    test "change_website/1 returns a website changeset" do
+      website = website_fixture()
+      assert %Ecto.Changeset{} = Records.change_website(website)
+    end
+  end
 end
