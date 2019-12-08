@@ -11,9 +11,9 @@ defmodule StatsWeb.Schema.Types do
     end
 
     enum :sort_field do
+        value :id, as: :id
         value :name, as: :name
         value :email, as: :email
-        value :gender, as: :gender
         value :date_of_birth, as: :date_of_birth
     end
 

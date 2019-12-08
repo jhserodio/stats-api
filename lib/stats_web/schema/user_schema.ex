@@ -7,7 +7,7 @@ defmodule StatsWeb.Schema.User do
         field :users, non_null(list_of(:user)) do
             arg :limit, :integer, default_value: 10
             arg :skip, :integer, default_value: 0
-            arg :sort_field, :sort_field, default_value: :name
+            arg :sort_field, :sort_field, default_value: :id
             arg :sort_order, :sort_order, default_value: :asc
             resolve &UsersResolver.user_list/3
         end
