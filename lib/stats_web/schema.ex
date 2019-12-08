@@ -1,6 +1,7 @@
 defmodule StatsWeb.Schema do
     
     use Absinthe.Schema
+    import_types StatsWeb.Schema.Types
     import_types StatsWeb.Schema.User
     
     query do
