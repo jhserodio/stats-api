@@ -1,0 +1,21 @@
+{
+  "name": "stats",
+  "version": "1.0.0",
+  "description": "elixir api graphQL for Mercafacil",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "jest"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "jhserodio",
+  "license": "ISC",
+  "dependencies": {
+    "easygraphql-load-tester": "^0.3.8",
+    "graphql-request": "^1.8.2",
+    "graphql-tester": "^0.0.5",
+    "jest": "^24.9.0"
+  }
+}
