@@ -69,7 +69,17 @@ defmodule Stats.Records do
   def get_user_by_email!(email), do: Repo.get_by!(User, [email: email])
 
 
+  @doc """
+  Check if user exist by email.
 
+  ## Examples
+
+      iex> user_exist?(joao.serodio@vnator.com)
+      True
+
+      iex> user_exist?(carambolas.quadradas@vnator.com)
+      False
+  """
   def user_exist?(email) do
     query = from u in User, where: u.email == ^email
     Repo.exists?(query)
