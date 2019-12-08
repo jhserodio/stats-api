@@ -1,0 +1,164 @@
+defmodule Stats.Records do
+  @moduledoc """
+  The Records context.
+  """
+
+  import Ecto.Query, warn: false
+  alias Stats.Repo
+
+  alias Stats.Records.User
+
+  @doc """
+  Returns the list of users.
+
+  ## Examples
+
+      iex> list_users()
+      [%User{}, ...]
+
+  """
+  def list_users(limit, skip, sort_field, sort_order) do
+    resultado = {sort_order, sort_field}
+    query = from(
+      u in User,
+      order_by: ^resultado,
+      offset: ^skip
+    )
+
+    %{entries: entries, metadata: metadata} = Repo.paginate(
+      query,
+      cursor_fields: [sort_field],
+      limit: limit
+    )
+
+    entries
+  end
+
+
+  @doc """
+  Gets a single user.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user!(123)
+      %User{}
+
+      iex> get_user!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user!(id) do
+    query = from u in User, where: u.id == ^id
+    if Repo.exists?(query) do
+      Repo.get!(User, id)
+    else
+      nil
+    end 
+  end
+
+
+  @doc """
+  Gets a single user by email.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user_by_email!(joao.serodio@vnator.com)
+      %User{}
+
+      iex> get_user_by_email!(carambolas.quadradas@vnator.com)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user_by_email!(email) do
+    if user_exist?(email) do
+      Repo.get_by!(User, [email: email])
+    else
+      nil
+    end 
+  end
+
+  @doc """
+  Check if user exist by email.
+
+  ## Examples
+
+      iex> user_exist?(joao.serodio@vnator.com)
+      True
+
+      iex> user_exist?(carambolas.quadradas@vnator.com)
+      False
+  """
+  def user_exist?(email) do
+    query = from u in User, where: u.email == ^email
+    Repo.exists?(query)
+  end
+
+  @doc """
+  Creates a user.
+
+  ## Examples
+
+      iex> create_user(%{field: value})
+      {:ok, %User{}}
+
+      iex> create_user(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_user(attrs \\ %{}) do
+    %User{}
+    |> User.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a user.
+
+  ## Examples
+
+      iex> update_user(user, %{field: new_value})
+      {:ok, %User{}}
+
+      iex> update_user(user, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_user(%User{} = user, attrs) do
+    user
+    |> User.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a User.
+
+  ## Examples
+
+      iex> delete_user(user)
+      {:ok, %User{}}
+
+      iex> delete_user(user)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_user(%User{} = user) do
+    Repo.delete(user)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking user changes.
+
+  ## Examples
+
+      iex> change_user(user)
+      %Ecto.Changeset{source: %User{}}
+
+  """
+  def change_user(%User{} = user) do
+    User.changeset(user, %{})
+  end
+end

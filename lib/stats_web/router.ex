@@ -5,7 +5,12 @@ defmodule StatsWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", StatsWeb do
+  scope "/" do
     pipe_through :api
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: StatsWeb.Schema,
+      interface: :simple,
+      context: %{pubsub: StatsWeb.Endpoint}
   end
 end
