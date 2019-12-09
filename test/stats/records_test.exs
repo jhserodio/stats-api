@@ -19,11 +19,6 @@ defmodule Stats.RecordsTest do
       user
     end
 
-    test "list_users/0 returns all users" do
-      user = user_fixture()
-      assert Records.list_users() == [user]
-    end
-
     test "get_user!/1 returns the user with given id" do
       user = user_fixture()
       assert Records.get_user!(user.id) == user
@@ -54,12 +49,6 @@ defmodule Stats.RecordsTest do
       user = user_fixture()
       assert {:error, %Ecto.Changeset{}} = Records.update_user(user, @invalid_attrs)
       assert user == Records.get_user!(user.id)
-    end
-
-    test "delete_user/1 deletes the user" do
-      user = user_fixture()
-      assert {:ok, %User{}} = Records.delete_user(user)
-      assert_raise Ecto.NoResultsError, fn -> Records.get_user!(user.id) end
     end
 
     test "change_user/1 returns a user changeset" do
@@ -117,11 +106,6 @@ defmodule Stats.RecordsTest do
       assert website == Records.get_website!(website.id)
     end
 
-    test "delete_website/1 deletes the website" do
-      website = website_fixture()
-      assert {:ok, %Website{}} = Records.delete_website(website)
-      assert_raise Ecto.NoResultsError, fn -> Records.get_website!(website.id) end
-    end
 
     test "change_website/1 returns a website changeset" do
       website = website_fixture()
@@ -132,8 +116,8 @@ defmodule Stats.RecordsTest do
   describe "visits" do
     alias Stats.Records.Visit
 
-    @valid_attrs %{timestamp: ~T[14:00:00]}
-    @update_attrs %{timestamp: ~T[15:01:01]}
+    @valid_attrs %{timestamp: "2010-04-17T14:00:00Z"}
+    @update_attrs %{timestamp: "2010-04-17T15:01:01Z"}
     @invalid_attrs %{timestamp: nil}
 
     def visit_fixture(attrs \\ %{}) do
@@ -157,7 +141,7 @@ defmodule Stats.RecordsTest do
 
     test "create_visit/1 with valid data creates a visit" do
       assert {:ok, %Visit{} = visit} = Records.create_visit(@valid_attrs)
-      assert visit.timestamp == ~T[14:00:00]
+      assert visit.timestamp == DateTime.from_naive!(~N[2010-04-17T14:00:00Z], "Etc/UTC")
     end
 
     test "create_visit/1 with invalid data returns error changeset" do
@@ -167,7 +151,7 @@ defmodule Stats.RecordsTest do
     test "update_visit/2 with valid data updates the visit" do
       visit = visit_fixture()
       assert {:ok, %Visit{} = visit} = Records.update_visit(visit, @update_attrs)
-      assert visit.timestamp == ~T[15:01:01]
+      assert visit.timestamp == DateTime.from_naive!(~N[2010-04-17T15:01:01Z], "Etc/UTC")
     end
 
     test "update_visit/2 with invalid data returns error changeset" do

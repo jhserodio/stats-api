@@ -12,7 +12,7 @@ describe('Visit Tests', function() {
         const mock = {
             website: 2,
             user: 2,
-            timestamp: "23:00:07"
+            timestamp: "2010-04-17T14:00:00Z"
         }
 
         const query = `mutation {
@@ -45,7 +45,7 @@ describe('Visit Tests', function() {
         const mock = {
             website: 999,
             user: 2,
-            timestamp: "23:00:07"
+            timestamp: "2010-04-17T14:00:00Z"
         }
 
         const query = `mutation {
@@ -76,7 +76,7 @@ describe('Visit Tests', function() {
         const mock = {
             website: 2,
             user: 999,
-            timestamp: "23:00:07"
+            timestamp: "2010-04-17T14:00:00Z"
         }
 
         const query = `mutation {

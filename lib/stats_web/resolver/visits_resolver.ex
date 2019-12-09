@@ -22,8 +22,8 @@ defmodule StatsWeb.VisitsResolver do
       if Records.user_exist_id?(user) do
         if Records.website_exist_id?(website) do
           case Records.create_visit(%{
-            website_id: website,
-            user_id: user,
+            website_id: String.to_integer(website),
+            user_id: String.to_integer(user),
             timestamp: timestamp
           }) do
             {:ok, visit} ->

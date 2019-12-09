@@ -13,19 +13,6 @@ defmodule Stats.Records do
 
   ## Examples
 
-      iex> list_users()
-      [%Website{}, ...]
-
-  """
-  def list_users do
-    Repo.all(Users)
-  end
-
-  @doc """
-  Returns the list of users.
-
-  ## Examples
-
       iex> list_users(limit, skip, sort_field, sort_order)
       [%User{}, ...]
 
@@ -100,10 +87,10 @@ defmodule Stats.Records do
   ## Examples
 
       iex> user_exist?(joao.serodio@vnator.com)
-      True
+      true
 
       iex> user_exist?(carambolas.quadradas@vnator.com)
-      False
+      false
   """
   def user_exist?(email) do
     query = from u in User, where: u.email == ^email
@@ -116,10 +103,10 @@ defmodule Stats.Records do
   ## Examples
 
       iex> user_exist?(1)
-      True
+      true
 
       iex> user_exist?(999999999)
-      False
+      false
   """
   def user_exist_id?(id) do
     query = from u in User, where: u.id == ^id
@@ -283,10 +270,10 @@ defmodule Stats.Records do
   ## Examples
 
       iex> website_exist?(www.mercafacil.com)
-      True
+      true
 
       iex> website_exist?(w3.c/!!)
-      False
+      false
   """
   def website_exist?(url) do
     query = from w in Website, where: w.url == ^url
@@ -299,10 +286,10 @@ defmodule Stats.Records do
   ## Examples
 
       iex> website_exist?(1)
-      True
+      true
 
       iex> website_exist?(999999)
-      False
+      false
   """
   def website_exist_id?(id) do
     query = from w in Website, where: w.id == ^id
@@ -468,5 +455,159 @@ defmodule Stats.Records do
   """
   def change_visit(%Visit{} = visit) do
     Visit.changeset(visit, %{})
+  end
+
+  def _mount_stats(visits, users, websites) do
+
+    new_visits = Enum.map(
+      visits,
+        fn(x) -> %{
+          timestamp: x.timestamp,
+          user: Enum.find(users, fn(y) -> y.id === x.user_id end),
+          website: Enum.find(websites, fn(w) -> w.id === x.website_id end)
+        } end
+    )
+
+    %{
+      users_count: length(users),
+      websites_count: length(websites),
+      visits_count: length(visits),
+      users: users,
+      websites: websites,
+      visits: new_visits,
+    }
+  end
+
+  def stats_total(
+    initial_timestamp,
+    final_timestamp
+  ) do
+
+    queryVisits = from(
+      v in Visit,
+      where: v.timestamp >= ^initial_timestamp and v.timestamp <= ^final_timestamp
+    )
+
+    visits = Repo.all(queryVisits)
+
+    userList = Enum.uniq(Enum.map(visits, fn(x) -> x.user_id end))
+    queryUsers = from(
+      u in User,
+      where: u.id in ^userList
+    )
+    users = Repo.all(queryUsers)
+
+    websiteList = Enum.uniq(Enum.map(visits, fn(x) -> x.website_id end))
+    queryWebsites = from(
+      w in Website,
+      where: w.id in ^websiteList,
+    )
+    websites = Repo.all(queryWebsites)
+
+    _mount_stats(visits, users, websites)
+  end
+
+  def filter_where_webites(websites) do
+    if length(websites) > 0 do
+      websiteQuery = from(
+        w in Website,
+        where: w.url in ^websites
+      )
+      websites = Repo.all(websiteQuery)
+      websites_id = Enum.map(websites, fn(x) -> x.id end)
+      dynamic([v], v.website_id in ^websites_id)
+    else
+      true
+    end
+  end
+
+  def filter_where_users(users) do
+    if length(users) > 0 do
+      userQuery = from(
+          u in User,
+          where: u.email in ^users
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
+  def filter_where_min_age(min_age) do
+    if min_age > 0 do
+      userQuery = from(
+        u in User,
+        where: u.date_of_birth >= ^min_age
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
+  def filter_where_max_age(max_age) do
+    if max_age > 0 do
+      userQuery = from(
+        u in User,
+        where: u.date_of_birth <= ^max_age
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
+  def filter_where_gender(gender) do
+    if gender do
+      IO.puts("TEU CU TEU CU TEU CUTEU CUTEU CUV TEU CU")
+      userQuery = from(
+        u in User,
+        where: u.gender == ^gender
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
+  def stats_by(args) do
+
+    queryVisits = 
+      Visit
+        |> where([v], v.timestamp >= ^args.initial_timestamp and v.timestamp <= ^args.final_timestamp)
+        |> where(^filter_where_webites(args.websites))
+        |> where(^filter_where_users(args.users))
+        |> where(^filter_where_min_age(args.min_age))
+        |> where(^filter_where_max_age(args.max_age))
+        |> where(^filter_where_gender(if Map.has_key?(args, :gender) do args.gender else nil end))
+        
+
+    visits = Repo.all(queryVisits)
+
+    userList = Enum.uniq(Enum.map(visits, fn(x) -> x.user_id end))
+    queryUsers = from(
+      u in User,
+      where: u.id in ^userList
+    )
+    users = Repo.all(queryUsers)
+
+    websiteList = Enum.uniq(Enum.map(visits, fn(x) -> x.website_id end))
+    
+    queryWebsites  = from(
+      w in Website,
+      where: w.id in ^websiteList,
+    )
+    
+    websites = Repo.all(queryWebsites)
+
+    _mount_stats(visits, users, websites)
   end
 end

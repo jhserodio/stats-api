@@ -63,6 +63,15 @@ defmodule StatsWeb.Schema.Types do
     object :visit do
         field :website, non_null(:website)
         field :user, non_null(:user)
-        field :timestamp, :time
+        field :timestamp, :datetime
+    end
+
+    object :stats do
+        field :users_count, :integer
+        field :websites_count, :integer
+        field :visits_count, :integer
+        field :websites, list_of(:website)
+        field :users, list_of(:user)
+        field :visits, list_of(:visit)
     end
 end

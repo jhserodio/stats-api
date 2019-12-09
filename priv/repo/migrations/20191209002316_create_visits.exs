@@ -3,7 +3,7 @@ defmodule Stats.Repo.Migrations.CreateVisits do
 
   def change do
     create table(:visits) do
-      add :timestamp, :time, null: false
+      add :timestamp, :utc_datetime, null: false
       add :website_id, references(:websites, on_delete: :nothing)
       add :user_id, references(:users, on_delete: :nothing)
 
