@@ -115,5 +115,26 @@ describe('Stats Tests', function() {
             })
     });
 
+    it('StatsTotal - with initial date greather than final date', done => {
+        const finalDate = "2012-04-17T14:00:00Z";
+        const initialDate = "2019-04-17T14:00:00Z";
+        const query = `{
+            statsTotal(
+                finalTimestamp: "${finalDate}"
+                finalTimestamp: "${initialDate}"
+            ) {
+                visits {
+                    timestamp
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .catch(err => {
+                expect(err).toBeDefined();
+                done();
+            })
+    });
+
     
 });
