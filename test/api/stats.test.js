@@ -136,5 +136,130 @@ describe('Stats Tests', function() {
             })
     });
 
-    
+    it('StatsTotal - with final date', done => {
+        const dateVisit = "2019-04-17T14:00:00Z";
+
+        const query = `{
+            statsTotal(
+                finalTimestamp: "${dateVisit}"
+            ) {
+                visits {
+                    timestamp
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsTotal.visits.every(visit => {
+                        const visitTimeStamp = new Date(timestamp.utc(visit.timestamp))
+                        const currentDate = new Date(timestamp.utc(dateVisit))
+
+                        return visitTimeStamp <= currentDate 
+                    });
+
+                expect(res.statsTotal).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsTotal.visits).toBeDefined();
+                
+
+                done();
+            })
+    });
+
+
+    // ===========================================================================================
+    // ========================= STATS BY WEBSITES ===============================================
+    // ===========================================================================================
+
+    it('StatsTotal - without date definitions', done => {
+        const query = `{
+            statsByWebsite {
+                visitsCount
+                usersCount
+                websitesCount
+                visits {
+                    timestamp
+                    user {
+                        id
+                        name
+                        email
+                        dateOfBirth
+                        gender
+                    }
+                }
+                users {
+                    id
+                    name
+                    email
+                    dateOfBirth
+                    gender
+                }
+                websites {
+                    url
+                    topic
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                expect(res.statsByWebsite).toBeDefined();
+                expect(res.statsByWebsite.visitsCount).toBeDefined();
+                expect(res.statsByWebsite.usersCount).toBeDefined();
+                expect(res.statsByWebsite.websitesCount).toBeDefined();
+                expect(res.statsByWebsite.visits).toBeDefined();
+                expect(res.statsByWebsite.users).toBeDefined();
+                expect(res.statsByWebsite.websites).toBeDefined();
+                done();
+            })
+    });
+
+    // ===========================================================================================
+    // ========================= STATS BY USERS ===============================================
+    // ===========================================================================================
+
+    it('StatsTotal - without date definitions', done => {
+        const query = `{
+            statsByUser {
+                visitsCount
+                usersCount
+                websitesCount
+                visits {
+                    timestamp
+                    user {
+                        id
+                        name
+                        email
+                        dateOfBirth
+                        gender
+                    }
+                }
+                users {
+                    id
+                    name
+                    email
+                    dateOfBirth
+                    gender
+                }
+                websites {
+                    url
+                    topic
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                expect(res.statsByUser).toBeDefined();
+                expect(res.statsByUser.visitsCount).toBeDefined();
+                expect(res.statsByUser.usersCount).toBeDefined();
+                expect(res.statsByUser.websitesCount).toBeDefined();
+                expect(res.statsByUser.visits).toBeDefined();
+                expect(res.statsByUser.users).toBeDefined();
+                expect(res.statsByUser.websites).toBeDefined();
+                done();
+            })
+    });
 });
