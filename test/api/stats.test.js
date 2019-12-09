@@ -326,8 +326,7 @@ describe('Stats Tests', function() {
             })
     });
 
-
-    it('statsByWebsite - with gender filter', done => {
+    it('statsByWebsite - with users filter', done => {
         const users = ['joao.serodio@vnator.com', 'ana.silveira@vnator.com'];
         const query = `{
             statsByWebsite(
@@ -348,6 +347,33 @@ describe('Stats Tests', function() {
                 expect(res.statsByWebsite).toBeDefined();
                 expect(checkTimeStamp).toBeTruthy();
                 expect(res.statsByWebsite.users).toBeDefined();
+                
+
+                done();
+            })
+    });
+
+    it('statsByWebsite - with websites filter', done => {
+        const websites = ['https://postcss.org/', 'https://elm-lang.org/'];
+        const query = `{
+            statsByWebsite(
+                websites: ["${websites[0]}", "${websites[1]}"],
+            ) {
+                websites {
+                    id
+                    url
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsByWebsite.websites.every(user => websites.includes(user.url));
+
+                expect(res.statsByWebsite).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsByWebsite.websites).toBeDefined();
                 
 
                 done();
@@ -511,7 +537,7 @@ describe('Stats Tests', function() {
             })
     });
 
-    it('statsByUser - with gender filter', done => {
+    it('statsByUser - with users filter', done => {
         const users = ['joao.serodio@vnator.com', 'ana.silveira@vnator.com'];
         const query = `{
             statsByUser(
@@ -532,6 +558,33 @@ describe('Stats Tests', function() {
                 expect(res.statsByUser).toBeDefined();
                 expect(checkTimeStamp).toBeTruthy();
                 expect(res.statsByUser.users).toBeDefined();
+                
+
+                done();
+            })
+    });
+
+    it('statsByUser - with websites filter', done => {
+        const websites = ['https://postcss.org/', 'https://elm-lang.org/'];
+        const query = `{
+            statsByUser(
+                websites: ["${websites[0]}", "${websites[1]}"],
+            ) {
+                websites {
+                    id
+                    url
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsByUser.websites.every(user => websites.includes(user.url));
+
+                expect(res.statsByUser).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsByUser.websites).toBeDefined();
                 
 
                 done();
