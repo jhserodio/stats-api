@@ -315,7 +315,35 @@ describe('Stats Tests', function() {
         self.client.request(query)
             .then(res => {
                 const checkTimeStamp =
-                    res.statsByWebsite.users.every(visit => visit.gender === gender);
+                    res.statsByWebsite.users.every(user => user.gender === gender);
+
+                expect(res.statsByWebsite).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsByWebsite.users).toBeDefined();
+                
+
+                done();
+            })
+    });
+
+
+    it('statsByWebsite - with gender filter', done => {
+        const users = ['joao.serodio@vnator.com', 'ana.silveira@vnator.com'];
+        const query = `{
+            statsByWebsite(
+                users: ["${users[0]}", "${users[1]}"],
+            ) {
+                users {
+                    id
+                    email
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsByWebsite.users.every(user => users.includes(user.email));
 
                 expect(res.statsByWebsite).toBeDefined();
                 expect(checkTimeStamp).toBeTruthy();
@@ -472,7 +500,34 @@ describe('Stats Tests', function() {
         self.client.request(query)
             .then(res => {
                 const checkTimeStamp =
-                    res.statsByUser.users.every(visit => visit.gender === gender);
+                    res.statsByUser.users.every(user => user.gender === gender);
+
+                expect(res.statsByUser).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsByUser.users).toBeDefined();
+                
+
+                done();
+            })
+    });
+
+    it('statsByUser - with gender filter', done => {
+        const users = ['joao.serodio@vnator.com', 'ana.silveira@vnator.com'];
+        const query = `{
+            statsByUser(
+                users: ["${users[0]}", "${users[1]}"],
+            ) {
+                users {
+                    id
+                    email
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsByUser.users.every(user => users.includes(user.email));
 
                 expect(res.statsByUser).toBeDefined();
                 expect(checkTimeStamp).toBeTruthy();
