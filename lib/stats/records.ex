@@ -563,6 +563,21 @@ defmodule Stats.Records do
     end
   end
 
+  def filter_where_gender(gender) do
+    if gender do
+      IO.puts("TEU CU TEU CU TEU CUTEU CUTEU CUV TEU CU")
+      userQuery = from(
+        u in User,
+        where: u.gender == ^gender
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
   def stats_by(args) do
 
     queryVisits = 
@@ -572,6 +587,7 @@ defmodule Stats.Records do
         |> where(^filter_where_users(args.users))
         |> where(^filter_where_min_age(args.min_age))
         |> where(^filter_where_max_age(args.max_age))
+        |> where(^filter_where_gender(if Map.has_key?(args, :gender) do args.gender else nil end))
         
 
     visits = Repo.all(queryVisits)
