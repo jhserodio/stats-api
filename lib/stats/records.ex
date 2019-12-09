@@ -600,7 +600,7 @@ defmodule Stats.Records do
         |> where(^filter_where_initial_date(if Map.has_key?(args, :initial_timestamp) do args.initial_timestamp else nil end))
         |> where(^filter_where_final_date(if Map.has_key?(args, :final_timestamp) do args.final_timestamp else nil end))
         |> where(^filter_where_webites(if Map.has_key?(args, :websites) do args.websites else nil end))
-        |> where(^filter_where_users(if Map.has_key?(args, :websites) do args.websites else nil end))
+        |> where(^filter_where_users(if Map.has_key?(args, :users) do args.users else nil end))
         |> where(^filter_where_min_age(if Map.has_key?(args, :min_age) do args.min_age else nil end))
         |> where(^filter_where_max_age(if Map.has_key?(args, :max_age) do args.max_age else nil end))
         |> where(^filter_where_gender(if Map.has_key?(args, :gender) do args.gender else nil end))
