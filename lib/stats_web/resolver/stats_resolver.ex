@@ -3,14 +3,21 @@ defmodule StatsWeb.StatsResolver do
     
     def stats_total(
         _root,
-        %{
-          initial_timestamp: initial_timestamp,
-          final_timestamp: final_timestamp
-        },
+        args,
         _info
     ) do
-      stats = Records.stats_total(initial_timestamp, final_timestamp)
-      {:ok, stats}
+      checkDates = 
+        (
+          Map.has_key?(args, :initial_timestamp)
+          && Map.has_key?(args, :final_timestamp)
+        ) && args.initial_timestamp > args.final_timestamp
+
+      if checkDates do
+        {:error, "initial_timestamp is greather than final_timestamp"}
+      else
+        stats = Records.stats_total(args)
+        {:ok, stats}
+      end
     end
 
     def stats_by(
@@ -18,7 +25,17 @@ defmodule StatsWeb.StatsResolver do
         args,
         _info
     ) do
-      stats = Records.stats_by(args)
-      {:ok, stats}
+      checkDates = 
+        (
+          Map.has_key?(args, :initial_timestamp)
+          && Map.has_key?(args, :final_timestamp)
+        ) && args.initial_timestamp > args.final_timestamp
+
+      if checkDates do
+        {:error, "initial_timestamp is greather than final_timestamp"}
+      else
+        stats = Records.stats_by(args)
+        {:ok, stats}
+      end
     end
 end
