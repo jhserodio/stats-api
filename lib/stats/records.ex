@@ -508,16 +508,13 @@ defmodule Stats.Records do
   end
 
   def filter_where_webites(websites) do
-    websiteQuery = from(
+    if length(websites) > 0 do
+      websiteQuery = from(
         w in Website,
         where: w.url in ^websites
-    )
-
-    websites = Repo.all(websiteQuery)
-
-    websites_id = Enum.map(websites, fn(x) -> x.id end)
-
-    if length(websites) > 0 do
+      )
+      websites = Repo.all(websiteQuery)
+      websites_id = Enum.map(websites, fn(x) -> x.id end)
       dynamic([v], v.website_id in ^websites_id)
     else
       true
@@ -525,16 +522,27 @@ defmodule Stats.Records do
   end
 
   def filter_where_users(users) do
-    userQuery = from(
-        u in User,
-        where: u.email in ^users
-    )
-
-    users = Repo.all(userQuery)
-
-    users_id = Enum.map(users, fn(x) -> x.id end)
-
     if length(users) > 0 do
+      userQuery = from(
+          u in User,
+          where: u.email in ^users
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
+  def filter_where_min_age(min_age) do
+    if min_age > 0 do
+      userQuery = from(
+        u in User,
+        where: u.date_of_birth >= ^min_age
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
       dynamic([v], v.user_id in ^users_id)
     else
       true
@@ -548,6 +556,7 @@ defmodule Stats.Records do
         |> where([v], v.timestamp >= ^args.initial_timestamp and v.timestamp <= ^args.final_timestamp)
         |> where(^filter_where_webites(args.websites))
         |> where(^filter_where_users(args.users))
+        |> where(^filter_where_min_age(args.min_age))
         
 
     visits = Repo.all(queryVisits)
