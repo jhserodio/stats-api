@@ -457,6 +457,27 @@ defmodule Stats.Records do
     Visit.changeset(visit, %{})
   end
 
+  def _mount_stats(visits, users, websites) do
+
+    new_visits = Enum.map(
+      visits,
+        fn(x) -> %{
+          timestamp: x.timestamp,
+          user: Enum.find(users, fn(y) -> y.id === x.user_id end),
+          website: Enum.find(websites, fn(w) -> w.id === x.website_id end)
+        } end
+    )
+
+    %{
+      users_count: length(users),
+      websites_count: length(websites),
+      visits_count: length(visits),
+      users: users,
+      websites: websites,
+      visits: new_visits,
+    }
+  end
+
   def stats_total(
     initial_timestamp,
     final_timestamp
@@ -469,28 +490,20 @@ defmodule Stats.Records do
 
     visits = Repo.all(queryVisits)
 
+    userList = Enum.uniq(Enum.map(visits, fn(x) -> x.user_id end))
     queryUsers = from(
       u in User,
-      where: u.id in [1,2,3]
+      where: u.id in ^userList
     )
-    users = Repo.all(User)
+    users = Repo.all(queryUsers)
 
-    # select the websites
-    # queryWebsites = from(
-    #   w in Website,
-    #   where: ,
-    # )
-    # websites = Repo.all(queryWebsites)
+    websiteList = Enum.uniq(Enum.map(visits, fn(x) -> x.website_id end))
+    queryWebsites = from(
+      w in Website,
+      where: w.id in ^websiteList,
+    )
+    websites = Repo.all(queryWebsites)
 
-    IO.inspect(visits)
-
-    %{
-      users_count: 0,
-      websites_count: 0,
-      visits_count: length(visits),
-      users: users,
-      # websites: websites,
-      visits: visits,
-    }
+    _mount_stats(visits, users, websites)
   end
 end

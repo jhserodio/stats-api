@@ -9,7 +9,7 @@ defmodule StatsWeb.StatsResolver do
         },
         _info
     ) do
-      visits = Records.stats_total(initial_timestamp, final_timestamp)
-      {:ok, visits}
+      stats = Records.stats_total(initial_timestamp, final_timestamp)
+      {:ok, stats}
     end
 end
