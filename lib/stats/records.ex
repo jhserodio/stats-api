@@ -549,6 +549,20 @@ defmodule Stats.Records do
     end
   end
 
+  def filter_where_max_age(max_age) do
+    if max_age > 0 do
+      userQuery = from(
+        u in User,
+        where: u.date_of_birth <= ^max_age
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
   def stats_by(args) do
 
     queryVisits = 
@@ -557,6 +571,7 @@ defmodule Stats.Records do
         |> where(^filter_where_webites(args.websites))
         |> where(^filter_where_users(args.users))
         |> where(^filter_where_min_age(args.min_age))
+        |> where(^filter_where_max_age(args.max_age))
         
 
     visits = Repo.all(queryVisits)
