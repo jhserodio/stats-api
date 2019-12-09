@@ -499,7 +499,7 @@ defmodule Stats.Records do
   end
 
   def filter_where_webites(websites) do
-    if websites do
+    if websites && length(websites) > 0 do
       websiteQuery = from(
         w in Website,
         where: w.url in ^websites
@@ -513,7 +513,7 @@ defmodule Stats.Records do
   end
 
   def filter_where_users(users) do
-    if users do
+    if users && length(users) > 0 do
       userQuery = from(
           u in User,
           where: u.email in ^users
@@ -527,7 +527,7 @@ defmodule Stats.Records do
   end
 
   def filter_where_min_age(min_age) do
-    if min_age do
+    if min_age && min_age > 150 do
       userQuery = from(
         u in User,
         where: u.date_of_birth >= ^min_age
@@ -541,7 +541,7 @@ defmodule Stats.Records do
   end
 
   def filter_where_max_age(max_age) do
-    if max_age do
+    if max_age && max_age > 0 do
       userQuery = from(
         u in User,
         where: u.date_of_birth <= ^max_age
