@@ -87,10 +87,10 @@ defmodule Stats.Records do
   ## Examples
 
       iex> user_exist?(joao.serodio@vnator.com)
-      True
+      true
 
       iex> user_exist?(carambolas.quadradas@vnator.com)
-      False
+      false
   """
   def user_exist?(email) do
     query = from u in User, where: u.email == ^email
@@ -103,10 +103,10 @@ defmodule Stats.Records do
   ## Examples
 
       iex> user_exist?(1)
-      True
+      true
 
       iex> user_exist?(999999999)
-      False
+      false
   """
   def user_exist_id?(id) do
     query = from u in User, where: u.id == ^id
@@ -270,10 +270,10 @@ defmodule Stats.Records do
   ## Examples
 
       iex> website_exist?(www.mercafacil.com)
-      True
+      true
 
       iex> website_exist?(w3.c/!!)
-      False
+      false
   """
   def website_exist?(url) do
     query = from w in Website, where: w.url == ^url
@@ -286,10 +286,10 @@ defmodule Stats.Records do
   ## Examples
 
       iex> website_exist?(1)
-      True
+      true
 
       iex> website_exist?(999999)
-      False
+      false
   """
   def website_exist_id?(id) do
     query = from w in Website, where: w.id == ^id
@@ -455,5 +455,44 @@ defmodule Stats.Records do
   """
   def change_visit(%Visit{} = visit) do
     Visit.changeset(visit, %{})
+  end
+
+  def stats_total(
+    initial_timestamp,
+    final_timestamp
+  ) do
+
+    queryVisits = from(
+      v in Visit,
+      where: v.timestamp >= ^initial_timestamp and v.timestamp <= ^final_timestamp
+    )
+
+    visits = Repo.all(queryVisits)
+
+    # select the users
+    # queryUsers = from(
+    #   u in User,
+    #   where: ,
+    #   offset: ^skip
+    # )
+    # users = Repo.all(queryUsers)
+
+    # select the websites
+    # queryWebsites = from(
+    #   w in Website,
+    #   where: ,
+    # )
+    # websites = Repo.all(queryWebsites)
+
+    # %{
+    #   users_count: 0,
+    #   websites_count: 0,
+    #   visits_count: 0,
+    #   # users: users,
+    #   # websites: websites,
+    #   visits: visits,
+    # }
+
+    visits
   end
 end
