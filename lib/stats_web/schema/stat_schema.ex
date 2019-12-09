@@ -4,9 +4,9 @@ defmodule StatsWeb.Schema.Stat do
     alias StatsWeb.StatsResolver
 
     object :stats_query do
-        field :stats_total, list_of(:visit) do
-            arg :initial_timestamp, :datetime, default_value: ~N[0001-01-01T01:01:01Z]
-            arg :final_timestamp, :datetime, default_value: ~N[9999-01-01T01:01:01Z]
+        field :stats_total, :stats do
+            arg :initial_timestamp, :datetime, default_value: DateTime.from_naive!(~N[0001-01-01T01:01:01Z], "Etc/UTC")
+            arg :final_timestamp, :datetime, default_value: DateTime.from_naive!(~N[9999-01-01T01:01:01Z], "Etc/UTC")
             resolve &StatsResolver.stats_total/3
         end
     end

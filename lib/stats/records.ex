@@ -484,15 +484,15 @@ defmodule Stats.Records do
     # )
     # websites = Repo.all(queryWebsites)
 
-    # %{
-    #   users_count: 0,
-    #   websites_count: 0,
-    #   visits_count: 0,
-    #   # users: users,
-    #   # websites: websites,
-    #   visits: visits,
-    # }
+    IO.inspect(visits)
 
-    visits
+    %{
+      users_count: 0,
+      websites_count: 0,
+      visits_count: length(visits),
+      # users: users,
+      # websites: websites,
+      visits: visits,
+    }
   end
 end
