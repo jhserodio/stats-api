@@ -5,14 +5,14 @@ defmodule StatsWeb.Schema.Stat do
 
     object :stats_query do
         field :stats_total, :stats do
-            arg :initial_timestamp, :datetime, default_value: DateTime.from_naive!(~N[0001-01-01T01:01:01Z], "Etc/UTC")
-            arg :final_timestamp, :datetime, default_value: DateTime.from_naive!(~N[9999-01-01T01:01:01Z], "Etc/UTC")
+            arg :initial_timestamp, :datetime
+            arg :final_timestamp, :datetime
             resolve &StatsResolver.stats_total/3
         end
 
         field :stats_by_website, :stats do
-            arg :initial_timestamp, :datetime, default_value: DateTime.from_naive!(~N[0001-01-01T01:01:01Z], "Etc/UTC")
-            arg :final_timestamp, :datetime, default_value: DateTime.from_naive!(~N[9999-01-01T01:01:01Z], "Etc/UTC")
+            arg :initial_timestamp, :datetime
+            arg :final_timestamp, :datetime
             arg :min_age, :integer
             arg :max_age, :integer
             arg :gender, :gender
@@ -22,8 +22,8 @@ defmodule StatsWeb.Schema.Stat do
         end
 
         field :stats_by_user, :stats do
-            arg :initial_timestamp, :datetime, default_value: DateTime.from_naive!(~N[0001-01-01T01:01:01Z], "Etc/UTC")
-            arg :final_timestamp, :datetime, default_value: DateTime.from_naive!(~N[9999-01-01T01:01:01Z], "Etc/UTC")
+            arg :initial_timestamp, :datetime
+            arg :final_timestamp, :datetime
             arg :min_age, :date, default_value: ~D[0001-01-01]
             arg :max_age, :date, default_value: ~D[9999-12-30]
             arg :gender, :gender, default_value: nil

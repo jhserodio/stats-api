@@ -478,15 +478,101 @@ defmodule Stats.Records do
     }
   end
 
-  def stats_total(
-    initial_timestamp,
-    final_timestamp
-  ) do
+  def filter_where_initial_date(initial_date) do
+    if initial_date do
+      dynamic(
+        [v], v.timestamp >= ^initial_date
+      )
+    else
+      true
+    end
+  end
 
-    queryVisits = from(
-      v in Visit,
-      where: v.timestamp >= ^initial_timestamp and v.timestamp <= ^final_timestamp
-    )
+  def filter_where_final_date(final_date) do
+    if final_date do
+      dynamic(
+        [v], v.timestamp <= ^final_date
+      )
+    else
+      true
+    end
+  end
+
+  def filter_where_webites(websites) do
+    if websites do
+      websiteQuery = from(
+        w in Website,
+        where: w.url in ^websites
+      )
+      websites = Repo.all(websiteQuery)
+      websites_id = Enum.map(websites, fn(x) -> x.id end)
+      dynamic([v], v.website_id in ^websites_id)
+    else
+      true
+    end
+  end
+
+  def filter_where_users(users) do
+    if users do
+      userQuery = from(
+          u in User,
+          where: u.email in ^users
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
+  def filter_where_min_age(min_age) do
+    if min_age do
+      userQuery = from(
+        u in User,
+        where: u.date_of_birth >= ^min_age
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
+  def filter_where_max_age(max_age) do
+    if max_age do
+      userQuery = from(
+        u in User,
+        where: u.date_of_birth <= ^max_age
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
+  def filter_where_gender(gender) do
+    if gender do
+      userQuery = from(
+        u in User,
+        where: u.gender == ^gender
+      )
+      users = Repo.all(userQuery)
+      users_id = Enum.map(users, fn(x) -> x.id end)
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
+  def stats_total(args) do
+
+    queryVisits = Visit
+      |> where(^filter_where_initial_date(if Map.has_key?(args, :initial_timestamp) do args.initial_timestamp else nil end))
+      |> where(^filter_where_final_date(if Map.has_key?(args, :final_timestamp) do args.final_timestamp else nil end))
 
     visits = Repo.all(queryVisits)
 
@@ -507,86 +593,16 @@ defmodule Stats.Records do
     _mount_stats(visits, users, websites)
   end
 
-  def filter_where_webites(websites) do
-    if length(websites) > 0 do
-      websiteQuery = from(
-        w in Website,
-        where: w.url in ^websites
-      )
-      websites = Repo.all(websiteQuery)
-      websites_id = Enum.map(websites, fn(x) -> x.id end)
-      dynamic([v], v.website_id in ^websites_id)
-    else
-      true
-    end
-  end
-
-  def filter_where_users(users) do
-    if length(users) > 0 do
-      userQuery = from(
-          u in User,
-          where: u.email in ^users
-      )
-      users = Repo.all(userQuery)
-      users_id = Enum.map(users, fn(x) -> x.id end)
-      dynamic([v], v.user_id in ^users_id)
-    else
-      true
-    end
-  end
-
-  def filter_where_min_age(min_age) do
-    if min_age > 0 do
-      userQuery = from(
-        u in User,
-        where: u.date_of_birth >= ^min_age
-      )
-      users = Repo.all(userQuery)
-      users_id = Enum.map(users, fn(x) -> x.id end)
-      dynamic([v], v.user_id in ^users_id)
-    else
-      true
-    end
-  end
-
-  def filter_where_max_age(max_age) do
-    if max_age > 0 do
-      userQuery = from(
-        u in User,
-        where: u.date_of_birth <= ^max_age
-      )
-      users = Repo.all(userQuery)
-      users_id = Enum.map(users, fn(x) -> x.id end)
-      dynamic([v], v.user_id in ^users_id)
-    else
-      true
-    end
-  end
-
-  def filter_where_gender(gender) do
-    if gender do
-      IO.puts("TEU CU TEU CU TEU CUTEU CUTEU CUV TEU CU")
-      userQuery = from(
-        u in User,
-        where: u.gender == ^gender
-      )
-      users = Repo.all(userQuery)
-      users_id = Enum.map(users, fn(x) -> x.id end)
-      dynamic([v], v.user_id in ^users_id)
-    else
-      true
-    end
-  end
-
   def stats_by(args) do
 
     queryVisits = 
       Visit
-        |> where([v], v.timestamp >= ^args.initial_timestamp and v.timestamp <= ^args.final_timestamp)
-        |> where(^filter_where_webites(args.websites))
-        |> where(^filter_where_users(args.users))
-        |> where(^filter_where_min_age(args.min_age))
-        |> where(^filter_where_max_age(args.max_age))
+        |> where(^filter_where_initial_date(if Map.has_key?(args, :initial_timestamp) do args.initial_timestamp else nil end))
+        |> where(^filter_where_final_date(if Map.has_key?(args, :final_timestamp) do args.final_timestamp else nil end))
+        |> where(^filter_where_webites(if Map.has_key?(args, :websites) do args.websites else nil end))
+        |> where(^filter_where_users(if Map.has_key?(args, :websites) do args.websites else nil end))
+        |> where(^filter_where_min_age(if Map.has_key?(args, :min_age) do args.min_age else nil end))
+        |> where(^filter_where_max_age(if Map.has_key?(args, :max_age) do args.max_age else nil end))
         |> where(^filter_where_gender(if Map.has_key?(args, :gender) do args.gender else nil end))
         
 

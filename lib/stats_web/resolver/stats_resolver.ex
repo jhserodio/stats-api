@@ -3,13 +3,10 @@ defmodule StatsWeb.StatsResolver do
     
     def stats_total(
         _root,
-        %{
-          initial_timestamp: initial_timestamp,
-          final_timestamp: final_timestamp
-        },
+        args,
         _info
     ) do
-      stats = Records.stats_total(initial_timestamp, final_timestamp)
+      stats = Records.stats_total(args)
       {:ok, stats}
     end
 
