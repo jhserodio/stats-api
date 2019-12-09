@@ -469,13 +469,11 @@ defmodule Stats.Records do
 
     visits = Repo.all(queryVisits)
 
-    # select the users
-    # queryUsers = from(
-    #   u in User,
-    #   where: ,
-    #   offset: ^skip
-    # )
-    # users = Repo.all(queryUsers)
+    queryUsers = from(
+      u in User,
+      where: u.id in [1,2,3]
+    )
+    users = Repo.all(User)
 
     # select the websites
     # queryWebsites = from(
@@ -490,7 +488,7 @@ defmodule Stats.Records do
       users_count: 0,
       websites_count: 0,
       visits_count: length(visits),
-      # users: users,
+      users: users,
       # websites: websites,
       visits: visits,
     }

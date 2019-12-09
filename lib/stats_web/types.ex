@@ -71,7 +71,7 @@ defmodule StatsWeb.Schema.Types do
         field :websites_count, :integer
         field :visits_count, :integer
         # field :websites, list_of(:website)
-        # field :users, list_of(:user)
+        field :users, list_of(:user)
         field :visits, list_of(:visit)
     end
 end

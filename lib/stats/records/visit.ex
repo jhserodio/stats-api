@@ -13,7 +13,7 @@ defmodule Stats.Records.Visit do
   @doc false
   def changeset(visit, attrs) do
     visit
-    |> cast(attrs, [:timestamp])
+    |> cast(attrs, [:timestamp, :website_id, :user_id])
     |> validate_required([:timestamp])
   end
 end

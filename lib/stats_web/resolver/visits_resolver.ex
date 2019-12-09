@@ -21,9 +21,17 @@ defmodule StatsWeb.VisitsResolver do
     }, _info) do
       if Records.user_exist_id?(user) do
         if Records.website_exist_id?(website) do
+          
+          IO.inspect("-------------------")
+          IO.inspect(%{
+            website_id: String.to_integer(website),
+            user_id: String.to_integer(user),
+            timestamp: timestamp
+            })
+          IO.inspect("-------------------")
           case Records.create_visit(%{
-            website_id: website,
-            user_id: user,
+            website_id: String.to_integer(website),
+            user_id: String.to_integer(user),
             timestamp: timestamp
           }) do
             {:ok, visit} ->
