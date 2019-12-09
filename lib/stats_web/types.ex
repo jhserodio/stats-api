@@ -59,4 +59,10 @@ defmodule StatsWeb.Schema.Types do
         field :url, non_null(:email)
         field :topic, :topic
     end
+
+    object :visit do
+        field :website, non_null(:website)
+        field :user, non_null(:user)
+        field :timestamp, :time
+    end
 end
