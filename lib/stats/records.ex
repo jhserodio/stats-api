@@ -524,12 +524,30 @@ defmodule Stats.Records do
     end
   end
 
+  def filter_where_users(users) do
+    userQuery = from(
+        u in User,
+        where: u.email in ^users
+    )
+
+    users = Repo.all(userQuery)
+
+    users_id = Enum.map(users, fn(x) -> x.id end)
+
+    if length(users) > 0 do
+      dynamic([v], v.user_id in ^users_id)
+    else
+      true
+    end
+  end
+
   def stats_by(args) do
 
     queryVisits = 
       Visit
         |> where([v], v.timestamp >= ^args.initial_timestamp and v.timestamp <= ^args.final_timestamp)
         |> where(^filter_where_webites(args.websites))
+        |> where(^filter_where_users(args.users))
         
 
     visits = Repo.all(queryVisits)
