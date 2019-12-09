@@ -299,6 +299,33 @@ describe('Stats Tests', function() {
             })
     });
 
+    it('statsByWebsite - with gender filter', done => {
+        const gender = "MALE";
+        const query = `{
+            statsByWebsite(
+                gender: ${gender},
+            ) {
+                users {
+                    id
+                    gender
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsByWebsite.users.every(visit => visit.gender === gender);
+
+                expect(res.statsByWebsite).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsByWebsite.users).toBeDefined();
+                
+
+                done();
+            })
+    });
+
     // ===========================================================================================
     // ========================= STATS BY USERS ===============================================
     // ===========================================================================================
@@ -425,6 +452,33 @@ describe('Stats Tests', function() {
         self.client.request(query)
             .catch(err => {
                 expect(err).toBeDefined();
+                done();
+            })
+    });
+
+    it('statsByUser - with gender filter', done => {
+        const gender = "MALE";
+        const query = `{
+            statsByUser(
+                gender: ${gender},
+            ) {
+                users {
+                    id
+                    gender
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsByUser.users.every(visit => visit.gender === gender);
+
+                expect(res.statsByUser).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsByUser.users).toBeDefined();
+                
+
                 done();
             })
     });
