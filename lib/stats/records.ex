@@ -13,19 +13,6 @@ defmodule Stats.Records do
 
   ## Examples
 
-      iex> list_users()
-      [%Website{}, ...]
-
-  """
-  def list_users do
-    Repo.all(Users)
-  end
-
-  @doc """
-  Returns the list of users.
-
-  ## Examples
-
       iex> list_users(limit, skip, sort_field, sort_order)
       [%User{}, ...]
 

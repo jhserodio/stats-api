@@ -3,7 +3,7 @@ defmodule Stats.Records.Visit do
   import Ecto.Changeset
 
   schema "visits" do
-    field :timestamp, :time
+    field :timestamp, :utc_datetime
     field :website_id, :id
     field :user_id, :id
 

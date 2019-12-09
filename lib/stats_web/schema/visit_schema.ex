@@ -7,7 +7,7 @@ defmodule StatsWeb.Schema.Visit do
         field :new_visit, :visit do
             arg :website, non_null(:id)
             arg :user, non_null(:id)
-            arg :timestamp, :time
+            arg :timestamp, :datetime
 
             resolve &VisitsResolver.new_visit/3
         end
