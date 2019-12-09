@@ -506,4 +506,50 @@ defmodule Stats.Records do
 
     _mount_stats(visits, users, websites)
   end
+
+  def filter_where_webites(websites) do
+    websiteQuery = from(
+        w in Website,
+        where: w.url in ^websites
+    )
+
+    websites = Repo.all(websiteQuery)
+
+    websites_id = Enum.map(websites, fn(x) -> x.id end)
+
+    if length(websites) > 0 do
+      dynamic([v], v.website_id in ^websites_id)
+    else
+      true
+    end
+  end
+
+  def stats_by(args) do
+
+    queryVisits = 
+      Visit
+        |> where([v], v.timestamp >= ^args.initial_timestamp and v.timestamp <= ^args.final_timestamp)
+        |> where(^filter_where_webites(args.websites))
+        
+
+    visits = Repo.all(queryVisits)
+
+    userList = Enum.uniq(Enum.map(visits, fn(x) -> x.user_id end))
+    queryUsers = from(
+      u in User,
+      where: u.id in ^userList
+    )
+    users = Repo.all(queryUsers)
+
+    websiteList = Enum.uniq(Enum.map(visits, fn(x) -> x.website_id end))
+    
+    queryWebsites  = from(
+      w in Website,
+      where: w.id in ^websiteList,
+    )
+    
+    websites = Repo.all(queryWebsites)
+
+    _mount_stats(visits, users, websites)
+  end
 end

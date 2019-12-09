@@ -12,4 +12,13 @@ defmodule StatsWeb.StatsResolver do
       stats = Records.stats_total(initial_timestamp, final_timestamp)
       {:ok, stats}
     end
+
+    def stats_by(
+        _root,
+        args,
+        _info
+    ) do
+      stats = Records.stats_by(args)
+      {:ok, stats}
+    end
 end
