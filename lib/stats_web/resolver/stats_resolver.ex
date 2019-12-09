@@ -10,7 +10,7 @@ defmodule StatsWeb.StatsResolver do
         (
           Map.has_key?(args, :initial_timestamp)
           && Map.has_key?(args, :final_timestamp)
-        ) && args.inital_timestamp > args.final_timestamp
+        ) && args.initial_timestamp > args.final_timestamp
 
       if checkDates do
         {:error, "initial_timestamp is greather than final_timestamp"}
@@ -29,7 +29,7 @@ defmodule StatsWeb.StatsResolver do
         (
           Map.has_key?(args, :initial_timestamp)
           && Map.has_key?(args, :final_timestamp)
-        ) && args.inital_timestamp > args.final_timestamp
+        ) && args.initial_timestamp > args.final_timestamp
 
       if checkDates do
         {:error, "initial_timestamp is greather than final_timestamp"}
