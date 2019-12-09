@@ -173,7 +173,7 @@ describe('Stats Tests', function() {
     // ========================= STATS BY WEBSITES ===============================================
     // ===========================================================================================
 
-    it('StatsTotal - without date definitions', done => {
+    it('statsByWebsite - without date definitions', done => {
         const query = `{
             statsByWebsite {
                 visitsCount
@@ -216,11 +216,94 @@ describe('Stats Tests', function() {
             })
     });
 
+    it('statsByWebsite - with final date', done => {
+        const dateVisit = "2019-04-17T14:00:00Z";
+        const query = `{
+            statsByWebsite(
+                finalTimestamp: "${dateVisit}",
+            ) {
+                visits {
+                    timestamp
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsByWebsite.visits.every(visit => {
+                        const visitTimeStamp = new Date(timestamp.utc(visit.timestamp))
+                        const currentDate = new Date(timestamp.utc(dateVisit))
+
+                        return visitTimeStamp <= currentDate 
+                    });
+
+                expect(res.statsByWebsite).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsByWebsite.visits).toBeDefined();
+                
+
+                done();
+            })
+    });
+
+    it('statsByWebsite - with initial date', done => {
+        const dateVisit = "2019-04-17T14:00:00Z";
+        const query = `{
+            statsByWebsite(
+                initialTimestamp: "${dateVisit}",
+            ) {
+                visits {
+                    timestamp
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsByWebsite.visits.every(visit => {
+                        const visitTimeStamp = new Date(timestamp.utc(visit.timestamp))
+                        const currentDate = new Date(timestamp.utc(dateVisit))
+
+                        return visitTimeStamp >= currentDate 
+                    });
+
+                expect(res.statsByWebsite).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsByWebsite.visits).toBeDefined();
+                
+
+                done();
+            })
+    });
+
+    it('statsByWebsite - with initial date greather than final date', done => {
+        const finalDate = "2012-04-17T14:00:00Z";
+        const initialDate = "2019-04-17T14:00:00Z";
+        const query = `{
+            statsByWebsite(
+                finalTimestamp: "${finalDate}"
+                finalTimestamp: "${initialDate}"
+            ) {
+                visits {
+                    timestamp
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .catch(err => {
+                expect(err).toBeDefined();
+                done();
+            })
+    });
+
     // ===========================================================================================
     // ========================= STATS BY USERS ===============================================
     // ===========================================================================================
 
-    it('StatsTotal - without date definitions', done => {
+    it('statsByUser - without date definitions', done => {
         const query = `{
             statsByUser {
                 visitsCount
@@ -259,6 +342,89 @@ describe('Stats Tests', function() {
                 expect(res.statsByUser.visits).toBeDefined();
                 expect(res.statsByUser.users).toBeDefined();
                 expect(res.statsByUser.websites).toBeDefined();
+                done();
+            })
+    });
+
+    it('statsByUser - with final date', done => {
+        const dateVisit = "2019-04-17T14:00:00Z";
+        const query = `{
+            statsByUser(
+                finalTimestamp: "${dateVisit}",
+            ) {
+                visits {
+                    timestamp
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsByUser.visits.every(visit => {
+                        const visitTimeStamp = new Date(timestamp.utc(visit.timestamp))
+                        const currentDate = new Date(timestamp.utc(dateVisit))
+
+                        return visitTimeStamp <= currentDate 
+                    });
+
+                expect(res.statsByUser).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsByUser.visits).toBeDefined();
+                
+
+                done();
+            })
+    });
+
+    it('statsByUser - with initial date', done => {
+        const dateVisit = "2019-04-17T14:00:00Z";
+        const query = `{
+            statsByUser(
+                initialTimestamp: "${dateVisit}",
+            ) {
+                visits {
+                    timestamp
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .then(res => {
+                const checkTimeStamp =
+                    res.statsByUser.visits.every(visit => {
+                        const visitTimeStamp = new Date(timestamp.utc(visit.timestamp))
+                        const currentDate = new Date(timestamp.utc(dateVisit))
+
+                        return visitTimeStamp >= currentDate 
+                    });
+
+                expect(res.statsByUser).toBeDefined();
+                expect(checkTimeStamp).toBeTruthy();
+                expect(res.statsByUser.visits).toBeDefined();
+                
+
+                done();
+            })
+    });
+
+    it('statsByUser - with initial date greather than final date', done => {
+        const finalDate = "2012-04-17T14:00:00Z";
+        const initialDate = "2019-04-17T14:00:00Z";
+        const query = `{
+            statsByUser(
+                finalTimestamp: "${finalDate}"
+                finalTimestamp: "${initialDate}"
+            ) {
+                visits {
+                    timestamp
+                }
+            }
+        }`;
+
+        self.client.request(query)
+            .catch(err => {
+                expect(err).toBeDefined();
                 done();
             })
     });
