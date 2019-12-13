@@ -12,5 +12,10 @@ defmodule StatsWeb.Router do
       schema: StatsWeb.Schema,
       interface: :simple,
       context: %{pubsub: StatsWeb.Endpoint}
+
+    
+    forward "/", Absinthe.Plug,
+      schema: StatsWeb.Schema
+
   end
 end
