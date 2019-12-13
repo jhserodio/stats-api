@@ -2,7 +2,7 @@ defmodule StatsWeb.Router do
   use StatsWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug CORSPlug, origin: "*"
   end
 
   scope "/" do
@@ -16,6 +16,5 @@ defmodule StatsWeb.Router do
     
     forward "/", Absinthe.Plug,
       schema: StatsWeb.Schema
-
   end
 end
