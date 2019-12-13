@@ -4,7 +4,7 @@ const timestamp = require('time-stamp');
 describe('Stats Tests', function() {
     const self = this;
     beforeAll(() => {
-        const endpoint = 'http://localhost:4000/graphiql';
+        const endpoint = 'http://localhost:4000/';
         self.client = new GraphQLClient(endpoint, { headers: {} });
     });
 
