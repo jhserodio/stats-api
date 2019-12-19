@@ -478,7 +478,7 @@ defmodule Stats.Records do
     }
   end
 
-  def filter_where_initial_date(initial_date) do
+  def _filter_where_initial_date(initial_date) do
     if initial_date do
       dynamic(
         [v], v.timestamp >= ^initial_date
@@ -488,7 +488,7 @@ defmodule Stats.Records do
     end
   end
 
-  def filter_where_final_date(final_date) do
+  def _filter_where_final_date(final_date) do
     if final_date do
       dynamic(
         [v], v.timestamp <= ^final_date
@@ -498,35 +498,35 @@ defmodule Stats.Records do
     end
   end
 
-  def filter_where_webites(websites) do
+  def _filter_where_webites(websites) do
     if websites && length(websites) > 0 do
       websiteQuery = from(
         w in Website,
-        where: w.url in ^websites
+        where: w.url in ^websites,
+        select: w.id
       )
       websites = Repo.all(websiteQuery)
-      websites_id = Enum.map(websites, fn(x) -> x.id end)
-      dynamic([v], v.website_id in ^websites_id)
+      dynamic([v], v.website_id in ^websites)
     else
       true
     end
   end
 
-  def filter_where_users(users) do
+  def _filter_where_users(users) do
     if users && length(users) > 0 do
       userQuery = from(
           u in User,
-          where: u.email in ^users
+          where: u.email in ^users,
+          select: u.id
       )
       users = Repo.all(userQuery)
-      users_id = Enum.map(users, fn(x) -> x.id end)
-      dynamic([v], v.user_id in ^users_id)
+      dynamic([v], v.user_id in ^users)
     else
       true
     end
   end
 
-  def filter_where_min_age(min_age) do
+  def _filter_where_min_age(min_age) do
     if min_age && min_age > 150 do
       userQuery = from(
         u in User,
@@ -540,7 +540,7 @@ defmodule Stats.Records do
     end
   end
 
-  def filter_where_max_age(max_age) do
+  def _filter_where_max_age(max_age) do
     if max_age && max_age > 0 do
       userQuery = from(
         u in User,
@@ -554,7 +554,7 @@ defmodule Stats.Records do
     end
   end
 
-  def filter_where_gender(gender) do
+  def _filter_where_gender(gender) do
     if gender do
       userQuery = from(
         u in User,
@@ -571,8 +571,8 @@ defmodule Stats.Records do
   def stats_total(args) do
 
     queryVisits = Visit
-      |> where(^filter_where_initial_date(if Map.has_key?(args, :initial_timestamp) do args.initial_timestamp else nil end))
-      |> where(^filter_where_final_date(if Map.has_key?(args, :final_timestamp) do args.final_timestamp else nil end))
+      |> where(^_filter_where_initial_date(if Map.has_key?(args, :initial_timestamp) do args.initial_timestamp else nil end))
+      |> where(^_filter_where_final_date(if Map.has_key?(args, :final_timestamp) do args.final_timestamp else nil end))
 
     visits = Repo.all(queryVisits)
 
@@ -597,13 +597,13 @@ defmodule Stats.Records do
 
     queryVisits = 
       Visit
-        |> where(^filter_where_initial_date(if Map.has_key?(args, :initial_timestamp) do args.initial_timestamp else nil end))
-        |> where(^filter_where_final_date(if Map.has_key?(args, :final_timestamp) do args.final_timestamp else nil end))
-        |> where(^filter_where_webites(if Map.has_key?(args, :websites) do args.websites else nil end))
-        |> where(^filter_where_users(if Map.has_key?(args, :users) do args.users else nil end))
-        |> where(^filter_where_min_age(if Map.has_key?(args, :min_age) do args.min_age else nil end))
-        |> where(^filter_where_max_age(if Map.has_key?(args, :max_age) do args.max_age else nil end))
-        |> where(^filter_where_gender(if Map.has_key?(args, :gender) do args.gender else nil end))
+        |> where(^_filter_where_initial_date(if Map.has_key?(args, :initial_timestamp) do args.initial_timestamp else nil end))
+        |> where(^_filter_where_final_date(if Map.has_key?(args, :final_timestamp) do args.final_timestamp else nil end))
+        |> where(^_filter_where_webites(if Map.has_key?(args, :websites) do args.websites else nil end))
+        |> where(^_filter_where_users(if Map.has_key?(args, :users) do args.users else nil end))
+        |> where(^_filter_where_min_age(if Map.has_key?(args, :min_age) do args.min_age else nil end))
+        |> where(^_filter_where_max_age(if Map.has_key?(args, :max_age) do args.max_age else nil end))
+        |> where(^_filter_where_gender(if Map.has_key?(args, :gender) do args.gender else nil end))
         
 
     visits = Repo.all(queryVisits)
